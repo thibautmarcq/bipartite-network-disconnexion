@@ -263,3 +263,44 @@ def delete_musrank_nodes( graph: Dict[int, List[int]], n: int) -> Dict[int, List
         delete_node_from_graph(copie, nodes[i])
 
     return copie
+
+
+# ----- CENTRALITE DE PAGERANK -----
+def pagerank_centrality(graph : Dict[int, List[int]], alpha=0.85, max_iter=100, tol=1e-6) -> Dict[int, float]:
+    """ Calcule les centralités de PageRank de chaque noeud du graphe """
+    n = len(graph)
+    if n == 0:
+        return {}
+
+    # Initialisation
+    pagerank = {node: 1.0 / n for node in graph}
+    for _ in range(max_iter):
+        new_pagerank = {}
+        for node in graph:
+            rank_sum = sum(pagerank[neighbor] / len(graph[neighbor]) for neighbor in graph if node in graph[neighbor])
+            new_pagerank[node] = (1 - alpha) / n + alpha * rank_sum
+
+        # Vérification de la convergence
+        diff = sum(abs(new_pagerank[node] - pagerank[node]) for node in graph)
+        pagerank = new_pagerank
+        if diff < tol:
+            break
+
+    return pagerank
+
+def order_pagerank_centrality(graph : Dict[int, List[int]]) -> List[int]:
+    """ Retourne les noeuds du graphe ordonnés par centralité de PageRank décroissante """
+    centralities = pagerank_centrality(graph)
+    brut = list(zip(centralities.keys(), centralities.values()))
+    triees = sorted(brut, key=lambda x: x[1], reverse=True)
+    return [node for node, score in triees]
+
+def delete_pagerank_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
+    """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
+        à partir de graph dont les n noeuds à la plus grande centralité de PageRank ont été supprimés
+    """
+    copie = copy.deepcopy(graph)
+    nodes = order_pagerank_centrality(graph)
+    for i in range(min(n, len(nodes))):
+        delete_node_from_graph(copie, nodes[i])
+    return copie
