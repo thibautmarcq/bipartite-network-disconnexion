@@ -1,3 +1,5 @@
+import math
+
 from tools import*
 
 # ------------------------------------------------------- 
@@ -301,6 +303,55 @@ def delete_pagerank_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, Li
     """
     copie = copy.deepcopy(graph)
     nodes = order_pagerank_centrality(graph)
+    for i in range(min(n, len(nodes))):
+        delete_node_from_graph(copie, nodes[i])
+    return copie
+
+
+# ----- CENTRALITE DE VECTEUR -----
+def eigenvector_centrality(graph : Dict[int, List[int]], max_iter=100, tol=1e-6) -> Dict[int, float]:
+    """ Calcule les centralités de vecteur propre de chaque noeud du graphe """
+    n = len(graph)
+    if n == 0:
+        return {}
+    # Initialisation
+    centrality = {1.0/len(graph) for n in graph}
+
+    # Itération de la méthode de la puissance
+    for _ in range(max_iter):
+        new_centrality = {0.0 for n in graph}
+        for node in graph:
+            for neighbor in graph[node]:
+                new_centrality[neighbor] += centrality[node]
+
+        # Normalisation
+        try:
+            s = 1.0/math.sqrt(sum(v**2 for v in new_centrality.values()))
+        except ZeroDivisionError:
+            s = 1.0
+        for n in new_centrality:
+            new_centrality[n] *= s
+
+        # verifier la convergence
+        diff = sum(abs(new_centrality[n] - centrality[n]) for n in centrality)
+        centrality = new_centrality
+        if diff < tol:
+            break
+    return centrality
+
+def order_eigenvector_centrality(graph : Dict[int, List[int]]) -> List[int]:
+    """ Retourne les noeuds du graphe ordonnés par centralité de vecteur propre décroissante """
+    centralities = eigenvector_centrality(graph)
+    brut = list(zip(centralities.keys(), centralities.values()))
+    triees = sorted(brut, key=lambda x: x[1], reverse=True)
+    return [node for node, score in triees]
+
+def delete_eigenvector_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
+    """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
+        à partir de graph dont les n noeuds à la plus grande centralité de vecteur propre ont été supprimés
+    """
+    copie = copy.deepcopy(graph)
+    nodes = order_eigenvector_centrality(graph)
     for i in range(min(n, len(nodes))):
         delete_node_from_graph(copie, nodes[i])
     return copie
