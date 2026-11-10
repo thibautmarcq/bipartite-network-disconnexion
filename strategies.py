@@ -17,15 +17,15 @@ def delete_random(graphe : Dict[int, List[int]], ns : int) -> Dict[int, List[int
             res[node].remove(rdm)
     return res 
 
-def delete_random(graph : Dict[int, List[int]], ns : int) -> Dict[int, List[int]]: 
-    """Supprime 'ns' noeuds du graphe de manière aléatoire"""
-    for _ in range(ns) : 
-        rdm = random.choice(list(graph.keys())) #choix du node target à supprimer du graphe
-        voisins = graph[rdm]
-        graph.pop(rdm)
-        for node in voisins : #on supprime le noeud target des listes de ses voisins
-            graph[node].remove(rdm)
-    return graph 
+# def delete_random(graph : Dict[int, List[int]], ns : int) -> Dict[int, List[int]]:
+#     """Supprime 'ns' noeuds du graphe de manière aléatoire"""
+#     for _ in range(ns) : 
+#         rdm = random.choice(list(graph.keys())) #choix du node target à supprimer du graphe
+#         voisins = graph[rdm]
+#         graph.pop(rdm)
+#         for node in voisins : #on supprime le noeud target des listes de ses voisins
+#             graph[node].remove(rdm)
+#     return graph 
 
 
 # ----- CENTRALITE DE DEGRE -----
@@ -156,7 +156,7 @@ def betweenness_centrality(graph : Dict[int, List[int]]) -> Dict[int, int] :
             pile.append(v) # et on l'ajoute dans la pile
 
             for neighbor in graph[v] :
-                if distance[neighbor] == nb_sommets : 
+                if distance[neighbor] == nb_sommets+1 : 
                     # maj de la distance au sommet origine 
                     distance[neighbor] = distance[v]+1
                     file.append(neighbor)
@@ -175,7 +175,7 @@ def betweenness_centrality(graph : Dict[int, List[int]]) -> Dict[int, int] :
             if w != node :
                 cb[w] += delta[w]
 
-    for n in cb : 
+    for n in cb :
         cb[n] = cb[n]/2 # graphe non-orienté chaque arrête est explorée 2 fois, on divise donc la centralité de chaque noeud par 2
 
     return cb 

@@ -59,8 +59,10 @@ def read_unoriented_from_csv(filename : str) -> Tuple[Dict[int, List[int]], Set[
                 actives.add(node)
             else :
                 passives.add(node)
+            if node not in dict:
+                dict[node] = list()
 
-    return dict, passives, actives
+    return dict, actives, passives
 
 # ------------------------------------------------------- 
 
@@ -124,15 +126,17 @@ def delete_centrality_nodes_fast_incremental(graph : Dict[int, List[int]], n : i
         delete_node_from_graph(graph, node)
     return graph
 
-def delete_active_nodes_fast_incremental(graph : Dict[int, List[int]], n : int, sorted_nodes : List[int], actives : Set[int], passives : Set[int]) -> Dict[int, List[int]] :
-    """ Supprime de graph les n noeuds actifs les plus hauts dans le classement sorted_nodes """
-    i = 0 
-    # l'indice dans la liste des noeuds triés 
-    for j in range(n): # boucle permettant de supprimer n noeuds actifs
-        while sorted_nodes[i] not in actives : # on attend de trouver un noeud actif
-            i+=1
-        delete_node_from_graph(graph, sorted_nodes[i])
+def delete_active_nodes_fast_incremental(graph : Dict[int, List[int]], n : int, sorted_nodes : List[int], actives : Set[int]) -> int :
+    """Supprime jusqu'à n noeuds actifs et retourne le nombre d'éléments parcourus."""
+    i = 0
+    deleted = 0
+    while i < len(sorted_nodes) and deleted < n:
+        node = sorted_nodes[i]
         i += 1
+        if node in actives:
+            if node in graph:
+                delete_node_from_graph(graph, node)
+            deleted += 1
     return i
 
 

@@ -9,23 +9,33 @@ def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passiv
     nb_actives = len(actives)
     nb_passives = len(passives)
 
+    if nb_actives == 0 or nb_passives == 0:
+        raise ValueError("Le graphe doit contenir des noeuds actifs et passifs.")
+
     if nb_actives < 10:
         # si le graphe est trop petit (moins de 10 noeufs actifs), on fait un palier par noeud
-        pas = 1
-        proportion_actives_supp = [i / nb_actives for i in range(nb_actives + 1)]
+        cibles_actives_supprimees = list(range(1, nb_actives + 1))
     else:
-        # sinon, on se donne 10 paliers 
-        pas = math.floor(nb_actives / 10)
-        proportion_actives_supp = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-    proportion_passives_restants = [0.0] # liste où on va stocker les résultats qui nous intéressent, la proportion de noeuds actifs restants après suppression
+        # sinon, on se donne 10 paliers en incluant la suppression totale
+        cibles_actives_supprimees = [
+            math.ceil(palier * nb_actives / 10) for palier in range(1, 11)
+        ]
+    proportion_actives_supp = [0.0] + [
+        cible / nb_actives for cible in cibles_actives_supprimees
+    ]
+    proportion_passives_restants = [
+        sum(not graph.get(node) for node in passives) / nb_passives
+    ]
 
     copie = copy.deepcopy(graph) # graphe qu'on va peu à pau modifier sur place, pour éviter de multiplier les calculs en recommençant à chaque fois
     sorted_nodes = get_strategy_ranking(strategie, graph, actives, passives) # l'ordre des noeuds obtenu pour la stratégie donnée
 
     index = 0 # l'index représentant l'avancement des noeuds consommés dans la suppression par incréments 
-    for i in proportion_actives_supp[1:] :
+    nb_actives_supprimees = 0
+    for cible in cibles_actives_supprimees:
         # Pour tous les incréments de pas décidés, on augmente la population d'espèces actives supprimées
-        index += delete_active_nodes_fast_incremental(copie, pas, sorted_nodes[index:], actives, passives)
+        index += delete_active_nodes_fast_incremental(copie, cible - nb_actives_supprimees, sorted_nodes[index:], actives)
+        nb_actives_supprimees = cible
         clear_graph(copie) # On s'assure que le graphe soit proprement modifié
         passives_left = count_passives(copie, passives)
         proportion_passives_restants.append(1 - (passives_left/nb_passives))
@@ -37,13 +47,13 @@ def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passiv
         aire_totale += largeur * hauteur_moyenne
 
 
-    print(aire_totale)
+    # print(aire_totale)
 
     plt.figure(figsize=(8, 5))
     plt.plot(proportion_actives_supp, proportion_passives_restants, marker='.', color='blue')
     plt.xlabel("Proportion de noeuds actifs supprimés")
-    plt.ylabel("Proportion de noeuds passifs restants ")
-    plt.title(("Evolution de la proportion d'espèces passives éteintes en fonction de la proportion d'espèces actives supprimées selon la stratégie", strategie))
+    plt.ylabel("Proportion d'espèces passives éteintes")
+    plt.title(f"Extinction des espèces passives selon la stratégie {strategie}")
     plt.grid(True)
     filename = "results/"+graph_name+"_"+strategie
     plt.savefig(filename, dpi=300, bbox_inches='tight')
