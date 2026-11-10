@@ -85,7 +85,7 @@ def closeness_centrality(graph : Dict[int, List[int]]) -> Dict[int, int]:
 
 
 def order_closeness_centrality(graph : Dict[int, List[int]]) -> List[int]:
-    """ Retourne une liste de noeuds ordonnés par centralité de proximité croissante """
+    """ Retourne une liste de noeuds ordonnés par centralité de proximité décroissante """
     centralities = closeness_centrality(graph)
     brut = list(zip(centralities.keys(), centralities.values()))
     triees = sorted(brut, key=lambda x: x[1], reverse=True) # on trie par valeur de centralité décroissante
@@ -97,7 +97,7 @@ def delete_closeness_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, L
     """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
         à partir de graph dont les n noeuds à la plus grande centralité de proximité ont été supprimés
     """
-    # ATTENTNION
+    # ATTENTION
     # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
     # en faisant uniquement varier n mais sur le même graphe
     # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
@@ -110,7 +110,7 @@ def delete_closeness_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, L
 
 def delete_closeness_nodes_incremental(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]] :
     """ Supprime de graph les n noeuds à la plus grande centralité de proximité  """
-    # ATTENTNION
+    # ATTENTION
     # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
     # en faisant uniquement varier n mais sur le même graphe
     # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
@@ -194,7 +194,7 @@ def delete_betweenness_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int,
     """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
         à partir de graph dont les n noeuds à la plus grande centralité d'intermédiarité ont été supprimés
     """
-    # ATTENTNION
+    # ATTENTION
     # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
     # en faisant uniquement varier n mais pas le graphe, alors
     # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
@@ -209,7 +209,7 @@ def delete_betweenness_nodes_incremental(graph : Dict[int, List[int]], n : int) 
     """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
         à partir de graph dont les n noeuds à la plus grande centralité d'intermédiarité ont été supprimés
     """
-    # ATTENTNION
+    # ATTENTION
     # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
     # en faisant uniquement varier n mais pas le graphe, alors
     # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
@@ -275,12 +275,16 @@ def musrank_centrality(graph : Dict[int, List[int]], actives : Set[int], passive
             break
     
     return importance, vulnerability
+
+    # new_dico = importance | vulnerability
+    # return new_dico
     
 
 def order_musrank_centrality(graph : Dict[int, List[int]]) -> List[int] :
     """ Retourne les noeuds du graphe ordonnés par centralité de MusRank décroissante """
     actives, passives = get_partitions(graph)
     importance, vulnerability = musrank_centrality(graph, actives, passives)
+    # importance = musrank_centrality(graph, actives, passives)
     brut = list(zip(importance.keys(), importance.values()))
     triees = sorted(brut, key=lambda x: x[1], reverse=True)
     return [node for node, score in triees]

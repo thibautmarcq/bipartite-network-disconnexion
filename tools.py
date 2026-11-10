@@ -35,7 +35,7 @@ def read_unoriented_from_csv(filename : str) -> Tuple[Dict[int, List[int]], Set[
     with open(filename+"_edges.csv") as f:
         next(f)
         for line in f:
-            if line[0] == "%" :
+            if line[0] == "#" :
                 continue
             (key, val) = line.split(",")[0:2] #
             key = int(key)

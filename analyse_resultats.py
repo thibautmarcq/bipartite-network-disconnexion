@@ -4,8 +4,8 @@ from constants import *
 
 # ------  POUR L'ANALYSE DES RESULTATS ------
 
-def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int], strategie : str, affichage : bool) -> float :
-    """ Donne l'aire du graphique d'extinction d'un graphe donné pour une certaine stratégie. """
+def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int], strategie : str, affichage : bool, graph_name : str) -> float :
+    """ Donne l'aire du graphique d'extinction d'un graphe donné pour une certaine stratégie, et enregistre le graphique correspondant à la courbe d'exctinction. """
     nb_actives = len(actives)
     nb_passives = len(passives)
 
@@ -36,17 +36,18 @@ def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passiv
         hauteur_moyenne = (proportion_passives_restants[i] + proportion_passives_restants[i+1]) / 2
         aire_totale += largeur * hauteur_moyenne
 
+
     print(aire_totale)
 
+    plt.figure(figsize=(8, 5))
+    plt.plot(proportion_actives_supp, proportion_passives_restants, marker='.', color='blue')
+    plt.xlabel("Proportion de noeuds actifs supprimés")
+    plt.ylabel("Proportion de noeuds passifs restants ")
+    plt.title(("Evolution de la proportion d'espèces passives éteintes en fonction de la proportion d'espèces actives supprimées selon la stratégie", strategie))
+    plt.grid(True)
+    filename = "results/"+graph_name+"_"+strategie
+    plt.savefig(filename, dpi=300, bbox_inches='tight')
     if affichage : 
-        plt.figure(figsize=(8, 5))
-        plt.plot(proportion_actives_supp, proportion_passives_restants, marker='.', color='blue')
-
-        plt.xlabel("Proportion de noeuds actifs supprimés")
-        plt.ylabel("Proportion de noeuds passifs restants ")
-        plt.title(("Evolution de la proportion d'espèces passives restantes en fonction de la proportion d'espèces actives supprimées selon la stratégie", strategie))
-        plt.legend()
-        plt.grid(True)
         plt.show()
 
     return aire_totale
