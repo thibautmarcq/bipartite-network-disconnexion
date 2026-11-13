@@ -25,6 +25,7 @@ Pour le moments, les stratégies que nous avons implémenté sont:
 - **Centralité de proximité (Closeness) :** Nœuds avec centralité de proximité décroissantes.
 - **Centralité d'intermediarité (Betweenness) :** Nœuds avec centralité de intermediarité décroissantes.
 - **MusRank :** Classement de nœuds en utilisant l'algorithme Musrank conçu pour les graphes bipartis.
+- **MusRank inversé :** Variante appliquée sur la partition passive pour évaluer le classement opposé de la même centralité.
 - **Eigenvector :** Classement de nœud relatif à l'importance de ses voisins.
 
 ## Exp

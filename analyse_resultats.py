@@ -1,10 +1,11 @@
+from time import time
 from tools import *
 from strategies import *
 from constants import *
 
 # ------  POUR L'ANALYSE DES RESULTATS ------
 
-def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int], strategie : str, affichage : bool, graph_name : str) -> float :
+def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int], strategie : str, affichage : bool, graph_name : str) -> Tuple[float, float] :
     """ Donne l'aire du graphique d'extinction d'un graphe donné pour une certaine stratégie, et enregistre le graphique correspondant à la courbe d'exctinction. """
     nb_actives = len(actives)
     nb_passives = len(passives)
@@ -28,7 +29,55 @@ def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passiv
     ]
 
     copie = copy.deepcopy(graph) # graphe qu'on va peu à pau modifier sur place, pour éviter de multiplier les calculs en recommençant à chaque fois
+    debut = time()
     sorted_nodes = get_strategy_ranking(strategie, graph, actives, passives) # l'ordre des noeuds obtenu pour la stratégie donnée
+    temps_classement = time() - debut
+
+    if strategie == "musrank_reversed":
+        if nb_passives < 10:
+            cibles_passives_supprimees = list(range(1, nb_passives + 1))
+        else:
+            cibles_passives_supprimees = [
+                math.ceil(palier * nb_passives / 10) for palier in range(1, 11)
+            ]
+        proportion_passives_supp = [0.0] + [
+            cible / nb_passives for cible in cibles_passives_supprimees
+        ]
+        proportion_actives_eteintes = [
+            sum(not graph.get(node) for node in actives) / nb_actives
+        ]
+
+        index = 0
+        nb_passives_supprimees = 0
+        for cible in cibles_passives_supprimees:
+            index += delete_passive_nodes_fast_incremental(
+                copie, cible - nb_passives_supprimees, sorted_nodes[index:], passives
+            )
+            nb_passives_supprimees = cible
+            clear_graph(copie)
+            actives_restantes = sum(node in copie for node in actives)
+            proportion_actives_eteintes.append(1 - actives_restantes / nb_actives)
+
+        aire_totale = 0
+        for i in range(len(proportion_passives_supp) - 1):
+            largeur = proportion_passives_supp[i + 1] - proportion_passives_supp[i]
+            hauteur_moyenne = (
+                proportion_actives_eteintes[i] + proportion_actives_eteintes[i + 1]
+            ) / 2
+            aire_totale += largeur * hauteur_moyenne
+
+        plt.figure(figsize=(8, 5))
+        plt.plot(proportion_passives_supp, proportion_actives_eteintes, marker='.', color='blue')
+        plt.xlabel("Proportion de noeuds passifs supprimés")
+        plt.ylabel("Proportion de noeuds actifs éteints")
+        plt.title(f"Extinction des noeuds actifs selon la stratégie {strategie}")
+        plt.grid(True)
+        filename = "results/"+graph_name+"_"+strategie
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        if affichage:
+            plt.show()
+
+        return aire_totale, temps_classement
 
     index = 0 # l'index représentant l'avancement des noeuds consommés dans la suppression par incréments 
     nb_actives_supprimees = 0
@@ -60,4 +109,4 @@ def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passiv
     if affichage : 
         plt.show()
 
-    return aire_totale
+    return aire_totale, temps_classement

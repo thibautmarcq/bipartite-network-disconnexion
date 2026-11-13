@@ -6,16 +6,16 @@ from tools import*
 # -------------- Stratégies de suppression --------------
 
 # ------ RANDOM ------
-def delete_random(graphe : Dict[int, List[int]], ns : int) -> Dict[int, List[int]]: 
-    """Supprime 'ns' noeuds du graphe de manière aléatoire en renvoyant un graphe correspondant (pas de modification)"""
-    res = copy.deepcopy(graphe)
-    for _ in range(ns) : 
-        rdm = random.choice(list(res.keys())) #choix du node target à supprimer du graphe
-        voisins = res[rdm]
-        res.pop(rdm)
-        for node in voisins : #on supprime le noeud target des listes de ses voisins
-            res[node].remove(rdm)
-    return res 
+# def delete_random(graphe : Dict[int, List[int]], ns : int) -> Dict[int, List[int]]: 
+#     """Supprime 'ns' noeuds du graphe de manière aléatoire en renvoyant un graphe correspondant (pas de modification)"""
+#     res = copy.deepcopy(graphe)
+#     for _ in range(ns) : 
+#         rdm = random.choice(list(res.keys())) #choix du node target à supprimer du graphe
+#         voisins = res[rdm]
+#         res.pop(rdm)
+#         for node in voisins : #on supprime le noeud target des listes de ses voisins
+#             res[node].remove(rdm)
+#     return res 
 
 # def delete_random(graph : Dict[int, List[int]], ns : int) -> Dict[int, List[int]]:
 #     """Supprime 'ns' noeuds du graphe de manière aléatoire"""
@@ -36,20 +36,20 @@ def degree_centrality(graph : Dict[int, List[int]]) -> List[int] :
     nodes, neighbors = zip(*triees)
     return nodes
 
-def delete_degree_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]] :
-    """ Renvoie un graphe corresponsant à graph où les n sommets de degré le plus élevé ont été supprimés. """
-    nodes = degree_centrality(graph)
-    copie = copy.deepcopy(graph)
-    for i in range(n) :
-        delete_node_from_graph(copie, nodes[i])
-    return copie
+# def delete_degree_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]] :
+#     """ Renvoie un graphe corresponsant à graph où les n sommets de degré le plus élevé ont été supprimés. """
+#     nodes = degree_centrality(graph)
+#     copie = copy.deepcopy(graph)
+#     for i in range(n) :
+#         delete_node_from_graph(copie, nodes[i])
+#     return copie
 
-def delete_degree_nodes_incremental(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]] :
-    """ Renvoie graph modifié où les n sommets de degré le plus élevé ont été supprimés. """
-    nodes = degree_centrality(graph)
-    for i in range(n) :
-        delete_node_from_graph(graph, nodes[i])
-    return graph
+# def delete_degree_nodes_incremental(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]] :
+#     """ Renvoie graph modifié où les n sommets de degré le plus élevé ont été supprimés. """
+#     nodes = degree_centrality(graph)
+#     for i in range(n) :
+#         delete_node_from_graph(graph, nodes[i])
+#     return graph
 
 
 # ------ CENTRALITE DE PROXIMITE ------
@@ -93,32 +93,32 @@ def order_closeness_centrality(graph : Dict[int, List[int]]) -> List[int]:
     return nodes
 
 
-def delete_closeness_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]] :
-    """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
-        à partir de graph dont les n noeuds à la plus grande centralité de proximité ont été supprimés
-    """
-    # ATTENTION
-    # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
-    # en faisant uniquement varier n mais sur le même graphe
-    # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
+# def delete_closeness_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]] :
+#     """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
+#         à partir de graph dont les n noeuds à la plus grande centralité de proximité ont été supprimés
+#     """
+#     # ATTENTION
+#     # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
+#     # en faisant uniquement varier n mais sur le même graphe
+#     # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
 
-    copie = copy.deepcopy(graph)
-    nodes = order_closeness_centrality(graph) # les noeuds triés par ordre décroissant de centralité
-    for i in range(n) :
-        delete_node_from_graph(copie, nodes[i])
-    return copie 
+#     copie = copy.deepcopy(graph)
+#     nodes = order_closeness_centrality(graph) # les noeuds triés par ordre décroissant de centralité
+#     for i in range(n) :
+#         delete_node_from_graph(copie, nodes[i])
+#     return copie 
 
-def delete_closeness_nodes_incremental(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]] :
-    """ Supprime de graph les n noeuds à la plus grande centralité de proximité  """
-    # ATTENTION
-    # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
-    # en faisant uniquement varier n mais sur le même graphe
-    # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
+# def delete_closeness_nodes_incremental(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]] :
+#     """ Supprime de graph les n noeuds à la plus grande centralité de proximité  """
+#     # ATTENTION
+#     # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
+#     # en faisant uniquement varier n mais sur le même graphe
+#     # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
 
-    nodes = order_closeness_centrality(graph) # les noeuds triés par ordre décroissant de centralité
-    for i in range(n) :
-        delete_node_from_graph(graph, nodes[i])
-    return graph 
+#     nodes = order_closeness_centrality(graph) # les noeuds triés par ordre décroissant de centralité
+#     for i in range(n) :
+#         delete_node_from_graph(graph, nodes[i])
+#     return graph 
 
 
 # ------ CENTRALITE D'INTERMEDIARITE -----
@@ -190,34 +190,34 @@ def order_betweenness_centrality(graph : Dict[int, List[int]]) -> List[int] :
     return nodes
 
 
-def delete_betweenness_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
-    """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
-        à partir de graph dont les n noeuds à la plus grande centralité d'intermédiarité ont été supprimés
-    """
-    # ATTENTION
-    # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
-    # en faisant uniquement varier n mais pas le graphe, alors
-    # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
+# def delete_betweenness_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
+#     """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
+#         à partir de graph dont les n noeuds à la plus grande centralité d'intermédiarité ont été supprimés
+#     """
+#     # ATTENTION
+#     # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
+#     # en faisant uniquement varier n mais pas le graphe, alors
+#     # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
 
-    copie = copy.deepcopy(graph)
-    nodes = order_betweenness_centrality(graph)
-    for i in range(n) :
-        delete_node_from_graph(copie, nodes[i])
-    return copie
+#     copie = copy.deepcopy(graph)
+#     nodes = order_betweenness_centrality(graph)
+#     for i in range(n) :
+#         delete_node_from_graph(copie, nodes[i])
+#     return copie
 
-def delete_betweenness_nodes_incremental(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
-    """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
-        à partir de graph dont les n noeuds à la plus grande centralité d'intermédiarité ont été supprimés
-    """
-    # ATTENTION
-    # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
-    # en faisant uniquement varier n mais pas le graphe, alors
-    # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
+# def delete_betweenness_nodes_incremental(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
+#     """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
+#         à partir de graph dont les n noeuds à la plus grande centralité d'intermédiarité ont été supprimés
+#     """
+#     # ATTENTION
+#     # Si cette opération est à réaliser plusieurs fois de suite sur le même graphe 
+#     # en faisant uniquement varier n mais pas le graphe, alors
+#     # utiliser la fonction 'delete_centrality_nodes_fast', plus rapide et efficace dans CE cas
 
-    nodes = order_betweenness_centrality(graph)
-    for i in range(n) :
-        delete_node_from_graph(graph, nodes[i])
-    return graph
+#     nodes = order_betweenness_centrality(graph)
+#     for i in range(n) :
+#         delete_node_from_graph(graph, nodes[i])
+#     return graph
 
 
 # ------ MUSRANK (papier référencé) -----
@@ -280,36 +280,33 @@ def musrank_centrality(graph : Dict[int, List[int]], actives : Set[int], passive
     # return new_dico
     
 
-def order_musrank_centrality(graph : Dict[int, List[int]]) -> List[int] :
+def order_musrank_centrality(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int]) -> List[int] :
     """ Retourne les noeuds du graphe ordonnés par centralité de MusRank décroissante """
-    actives, passives = get_partitions(graph)
     importance, vulnerability = musrank_centrality(graph, actives, passives)
-    # importance = musrank_centrality(graph, actives, passives)
     brut = list(zip(importance.keys(), importance.values()))
     triees = sorted(brut, key=lambda x: x[1], reverse=True)
     return [node for node, score in triees]
 
 
-def order_musrank_centrality_reversed(graph : Dict[int, List[int]]) -> List[int] :
+def order_musrank_centrality_reversed(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int]) -> List[int] :
     """ Retourne les noeuds passifs du graphe ordonnés par centralité de MusRank décroissante """
-    actives, passives = get_partitions(graph)
     importance, vulnerability = musrank_centrality(graph, passives, actives)
     brut = list(zip(importance.keys(), importance.values()))
     triees = sorted(brut, key=lambda x: x[1], reverse=True)
     return [node for node, score in triees]
 
 
-def delete_musrank_nodes_incremental( graph: Dict[int, List[int]], n: int) -> Dict[int, List[int]]:
-    """
-    Supprime les n noeudsayant la plus grande importance MusRank de graph. """
+# def delete_musrank_nodes_incremental( graph: Dict[int, List[int]], n: int) -> Dict[int, List[int]]:
+#     """
+#     Supprime les n noeudsayant la plus grande importance MusRank de graph. """
 
-    copie = copy.deepcopy(graph)
+#     copie = copy.deepcopy(graph)
 
-    # Get nodes ordered by decreasing MusRank importance
-    nodes = order_musrank_centrality(graph)
+#     # Get nodes ordered by decreasing MusRank importance
+#     nodes = order_musrank_centrality(graph)
 
-    for i in range(min(n, len(nodes))):
-        delete_node_from_graph(copie, nodes[i])
+#     for i in range(min(n, len(nodes))):
+#         delete_node_from_graph(copie, nodes[i])
 
     return copie
 
@@ -344,23 +341,23 @@ def order_pagerank_centrality(graph : Dict[int, List[int]]) -> List[int]:
     triees = sorted(brut, key=lambda x: x[1], reverse=True)
     return [node for node, score in triees]
 
-def delete_pagerank_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
-    """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
-        à partir de graph dont les n noeuds à la plus grande centralité de PageRank ont été supprimés
-    """
-    copie = copy.deepcopy(graph)
-    nodes = order_pagerank_centrality(graph)
-    for i in range(min(n, len(nodes))):
-        delete_node_from_graph(copie, nodes[i])
-    return copie
+# def delete_pagerank_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
+#     """ Retourne un nouveau graphe (sous forme de matrice d'adjacence)
+#         à partir de graph dont les n noeuds à la plus grande centralité de PageRank ont été supprimés
+#     """
+#     copie = copy.deepcopy(graph)
+#     nodes = order_pagerank_centrality(graph)
+#     for i in range(min(n, len(nodes))):
+#         delete_node_from_graph(copie, nodes[i])
+#     return copie
 
-def delete_pagerank_nodes_incremental(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
-    """ Supprime les n noeuds à la plus grande centralité de PageRank de graph
-    """
-    nodes = order_pagerank_centrality(graph)
-    for i in range(min(n, len(nodes))):
-        delete_node_from_graph(graph, nodes[i])
-    return graph
+# def delete_pagerank_nodes_incremental(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
+#     """ Supprime les n noeuds à la plus grande centralité de PageRank de graph
+#     """
+#     nodes = order_pagerank_centrality(graph)
+#     for i in range(min(n, len(nodes))):
+#         delete_node_from_graph(graph, nodes[i])
+#     return graph
 
 
 # ----- CENTRALITE DE VECTEUR -----
@@ -401,13 +398,13 @@ def order_eigenvector_centrality(graph : Dict[int, List[int]]) -> List[int]:
     triees = sorted(brut, key=lambda x: x[1], reverse=True)
     return [node for node, score in triees]
 
-def delete_eigenvector_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
-    """ Supprime les n noeuds à la plus grande centralité de vecteur propre de graph
-    """
-    nodes = order_eigenvector_centrality(graph)
-    for i in range(min(n, len(nodes))):
-        delete_node_from_graph(graph, nodes[i])
-    return graph
+# def delete_eigenvector_nodes(graph : Dict[int, List[int]], n : int) -> Dict[int, List[int]]:
+#     """ Supprime les n noeuds à la plus grande centralité de vecteur propre de graph
+#     """
+#     nodes = order_eigenvector_centrality(graph)
+#     for i in range(min(n, len(nodes))):
+#         delete_node_from_graph(graph, nodes[i])
+#     return graph
 
 
 
@@ -433,7 +430,10 @@ def get_strategy_ranking(strategie : str, graph : Dict[int, List[int]], actives 
             return order_betweenness_centrality(graph)
 
         case "musrank" :
-            return order_musrank_centrality(graph)
+            return order_musrank_centrality(graph, actives, passives)
+
+        case "musrank_reversed" :
+            return order_musrank_centrality_reversed(graph, actives, passives)
 
         case "pagerank" :
             return order_pagerank_centrality(graph)

@@ -140,41 +140,55 @@ def delete_active_nodes_fast_incremental(graph : Dict[int, List[int]], n : int, 
     return i
 
 
+def delete_passive_nodes_fast_incremental(graph : Dict[int, List[int]], n : int, sorted_nodes : List[int], passives : Set[int]) -> int :
+    """Supprime jusqu'à n noeuds passifs et retourne le nombre d'éléments parcourus."""
+    i = 0
+    deleted = 0
+    while i < len(sorted_nodes) and deleted < n:
+        node = sorted_nodes[i]
+        i += 1
+        if node in passives:
+            if node in graph:
+                delete_node_from_graph(graph, node)
+            deleted += 1
+    return i
+
+
 # -------------------------------------------------------
 
 #utile pour differencier les noeuds "passifs" et "actifs" dans les graphes bipartis pour la stratégie MusRank
-def get_partitions(graph: Dict[int, List[int]]) -> Tuple[Set[int], Set[int]]:
-    A = set()
-    B = set()
+# def get_partitions(graph: Dict[int, List[int]]) -> Tuple[Set[int], Set[int]]:
+#     A = set()
+#     B = set()
 
-    color = {}
+#     color = {}
 
-    for node in graph:
-        if node in color:
-            continue
+#     for node in graph:
+#         if node in color:
+#             continue
 
-        # Start a new connected component
-        color[node] = 0
-        queue = deque([node])
+#         # Start a new connected component
+#         color[node] = 0
+#         queue = deque([node])
 
-        while queue:
-            u = queue.popleft()
+#         while queue:
+#             u = queue.popleft()
 
-            for v in graph[u]:
-                if v not in color:
-                    color[v] = 1 - color[u]
-                    queue.append(v)
+#             for v in graph[u]:
+#                 if v not in color:
+#                     color[v] = 1 - color[u]
+#                     queue.append(v)
 
-                elif color[v] == color[u]:
-                    raise ValueError("Graph is not bipartite!")
+#                 elif color[v] == color[u]:
+#                     raise ValueError("Graph is not bipartite!")
 
-    for node, c in color.items():
-        if c == 0:
-            A.add(node)
-        else:
-            B.add(node)
+#     for node, c in color.items():
+#         if c == 0:
+#             A.add(node)
+#         else:
+#             B.add(node)
 
-    return A, B
+#     return A, B
 
 
 def clear_graph(graph : Dict[int, List[int]]) -> None :

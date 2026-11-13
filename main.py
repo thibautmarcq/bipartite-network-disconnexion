@@ -13,12 +13,13 @@ def main() -> None:
         "degree",
         "pagerank",
         "musrank",
+        "musrank_reversed",
     )
 
     graph, active_species, passive_species = read_unoriented_from_csv(dataset_path)
 
     for strategy in strategies:
-        extinction_area = delete_nodes_result(
+        extinction_area, ranking_time = delete_nodes_result(
             graph,
             active_species,
             passive_species,
@@ -26,7 +27,10 @@ def main() -> None:
             show_plots,
             dataset_name,
         )
-        print(f"{strategy}: extinction curve area = {extinction_area:.4f}")
+        print(
+            f"{strategy}: extinction curve area = {extinction_area:.4f} | "
+            f"ranking time = {ranking_time:.8f}s "
+        )
 
 
 if __name__ == "__main__":
