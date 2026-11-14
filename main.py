@@ -22,7 +22,7 @@ DATASETS = list_datasets()
 
 N_RANDOM = 100
 STRATEGIES = ("closeness", "eigenvector", "betweenness", "degree",
-              "pagerank", "musrank", "musrank_reversed")
+              "pagerank", "musrank", "musrank_reversed", "neighborhood")
 
 
 def run_random(graph, actives, passives, name):

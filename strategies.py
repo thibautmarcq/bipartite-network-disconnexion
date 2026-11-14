@@ -457,6 +457,34 @@ def order_eigenvector_centrality(graph : Dict[int, List[int]]) -> List[int]:
 #         delete_node_from_graph(graph, nodes[i])
 #     return graph
 
+# ----- NEIGHBORHOOD -----
+def neighborhood_centrality(graph : Dict[int, List[int]]) -> Dict[int, Tuple[int, ...]] :
+    """ Calcule les centralité de cette manière :
+    Priorité aux noeuds avec le plus de voisins de degré 1, puis aux noeuds avec le plus de voisins de degré 2, etc.
+    Le score d'un noeud est le tuple (c1, c2, ..., cK) où ck = nombre de voisins de degré k.
+    """
+    # Calcul du degré de chaque noeud
+    degree = {node: len(neighbors) for node, neighbors in graph.items()}
+    max_degree = max(degree.values(), default=0)
+ 
+    scores = {}
+    for node, neighbors in graph.items():
+        profile = [0] * max_degree
+        for neighbor in neighbors:
+            profile[degree[neighbor] - 1] += 1
+        scores[node] = tuple(profile)
+    return scores
+
+
+def order_neighborhood_centrality(graph : Dict[int, List[int]]) -> List[int] :
+    """ Retourne les noeuds du graphe ordonnés par la centralité de voisinage décroissante 
+        En cas d'égalité, on prend le noeud avec le plus de voisins, puis le plus petit indice.
+    """ 
+    scores = neighborhood_centrality(graph)
+    brut = list(zip(scores.keys(), scores.values()))
+    triees = sorted(brut, key=lambda x: (x[1], len(graph[x[0]]), -x[0]), reverse=True)
+    return [node for node, score in triees]
+
 
 
 # ----- COMMUN A TOUTES LES STRATEGIES POUR LE CLASSEMENT -----
@@ -491,3 +519,6 @@ def get_strategy_ranking(strategie : str, graph : Dict[int, List[int]], actives 
 
         case "eigenvector" :
             return order_eigenvector_centrality(graph)
+
+        case "neighborhood" :
+            return order_neighborhood_centrality(graph)
