@@ -1,6 +1,7 @@
 import math
 
 from tools import*
+from musrank_log import *
 
 # ------------------------------------------------------- 
 # -------------- Stratégies de suppression --------------
@@ -220,10 +221,49 @@ def order_betweenness_centrality(graph : Dict[int, List[int]]) -> List[int] :
 #     return graph
 
 
-# ------ MUSRANK (papier référencé) -----
+def logsumexp(values):
+    """Numerically stable calculation of log(sum(exp(values)))."""
+    values = list(values)
 
-def musrank_centrality(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int], max_iter=1000, tol=1e-8) -> Tuple[Dict[int, float], Dict[int, float]]:
-    """ Calcule les centralités de MusRank de chaque noeud du graphe """
+    if not values:
+        return -math.inf
+
+    maximum = max(values)
+
+    if maximum == -math.inf:
+        return -math.inf
+
+    if maximum == math.inf:
+        return math.inf
+
+    return maximum + math.log(
+        math.fsum(math.exp(x - maximum) for x in values)
+    )
+
+
+def normalize_log_scores(scores):
+    """Normalize scores so their arithmetic mean is 1."""
+    if not scores:
+        return scores
+
+    log_sum = logsumexp(scores.values())
+
+    if log_sum == -math.inf:
+        return scores
+
+    log_mean = log_sum - math.log(len(scores))
+
+    return {
+        node: value - log_mean if value != -math.inf else -math.inf
+        for node, value in scores.items()
+    }
+
+
+# ------ MUSRANK (papier référencé) -----
+"""
+
+def musrank_centrality(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int], max_iter=500, tol=1e-8) -> Tuple[Dict[int, float], Dict[int, float]]:
+    # Calcule les centralités de MusRank de chaque noeud du graphe 
 
     if not actives or not passives:
         raise ValueError("Both partitions must contain at least one node.")
@@ -232,15 +272,25 @@ def musrank_centrality(graph : Dict[int, List[int]], actives : Set[int], passive
     importance = {u: 1.0 for u in actives}
     vulnerability = {v: 1.0 for v in passives}
 
-    for _ in range(max_iter):
+    # bad = [a for a in actives if not any(p in passives for p in graph[a])]
+    # bad_edges = [(p, a) for p in passives for a in graph[p]
+    #         if a in actives and p not in graph[a]]
+    # # print(len(bad), len(bad_edges))
+    # print("remaining actives:", len(actives), "remaining passives:", len(passives))
+    for i in range(max_iter):
+        # if min(importance.values()) <= 1e-200:
+        #     print("underflow", min(importance.values()), len(actives), len(passives))
         # Mise à jour des centralités
         new_importance = {
             a: sum(vulnerability[p] for p in graph[a] if p in passives)
             for a in actives
         }
+        # print(i)
+        # print("Remaining actives:", len(actives))
+        # print("Zero importance:", [a for a in actives if importance[a] == 0])
         new_vulnerability = {
             p: 1.0 / sum(
-                1.0 / importance[a] for a in graph[p] if a in actives
+                1.0 / new_importance[a] for a in graph[p] if a in actives
             )
             if any(a in actives for a in graph[p]) else 0.0
             for p in passives
@@ -278,7 +328,7 @@ def musrank_centrality(graph : Dict[int, List[int]], actives : Set[int], passive
 
     # new_dico = importance | vulnerability
     # return new_dico
-    
+"""
 
 def order_musrank_centrality(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int]) -> List[int] :
     """ Retourne les noeuds du graphe ordonnés par centralité de MusRank décroissante """
@@ -294,6 +344,7 @@ def order_musrank_centrality_reversed(graph : Dict[int, List[int]], actives : Se
     brut = list(zip(importance.keys(), importance.values()))
     triees = sorted(brut, key=lambda x: x[1], reverse=True)
     return [node for node, score in triees]
+
 
 
 # def delete_musrank_nodes_incremental( graph: Dict[int, List[int]], n: int) -> Dict[int, List[int]]:

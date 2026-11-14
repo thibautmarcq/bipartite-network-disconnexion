@@ -66,18 +66,19 @@ def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passiv
             ) / 2
             aire_totale += largeur * hauteur_moyenne
 
-        plt.figure(figsize=(8, 5))
-        plt.plot(proportion_passives_supp, proportion_actives_eteintes, marker='.', color='blue')
-        plt.xlabel("Proportion de noeuds passifs supprimés")
-        plt.ylabel("Proportion de noeuds actifs éteints")
-        plt.title(f"Extinction des noeuds actifs selon la stratégie {strategie}")
-        plt.grid(True)
-        filename = "results/"+graph_name+"_"+strategie
-        plt.savefig(filename, dpi=300, bbox_inches='tight')
-        if affichage:
-            plt.show()
+        # plt.figure(figsize=(8, 5))
+        # plt.plot(proportion_passives_supp, proportion_actives_eteintes, marker='.', color='blue')
+        # plt.xlabel("Proportion de noeuds passifs supprimés")
+        # plt.ylabel("Proportion de noeuds actifs éteints")
+        # plt.title(f"Extinction des noeuds actifs selon la stratégie {strategie}")
+        # plt.grid(True)
+        # filename = "results/"+graph_name+"_"+strategie
+        # plt.savefig(filename, dpi=300, bbox_inches='tight')
+        # if affichage:
+        #     plt.show()
+        # plt.close()
 
-        return aire_totale, temps_classement
+        return aire_totale, temps_classement, proportion_passives_supp, proportion_actives_eteintes
 
     index = 0 # l'index représentant l'avancement des noeuds consommés dans la suppression par incréments 
     nb_actives_supprimees = 0
@@ -98,15 +99,16 @@ def delete_nodes_result(graph : Dict[int, List[int]], actives : Set[int], passiv
 
     # print(aire_totale)
 
-    plt.figure(figsize=(8, 5))
-    plt.plot(proportion_actives_supp, proportion_passives_restants, marker='.', color='blue')
-    plt.xlabel("Proportion de noeuds actifs supprimés")
-    plt.ylabel("Proportion d'espèces passives éteintes")
-    plt.title(f"Extinction des espèces passives selon la stratégie {strategie}")
-    plt.grid(True)
-    filename = "results/"+graph_name+"_"+strategie
-    plt.savefig(filename, dpi=300, bbox_inches='tight')
-    if affichage : 
-        plt.show()
+    # plt.figure(figsize=(8, 5))
+    # plt.plot(proportion_actives_supp, proportion_passives_restants, marker='.', color='blue')
+    # plt.xlabel("Proportion de noeuds actifs supprimés")
+    # plt.ylabel("Proportion d'espèces passives éteintes")
+    # plt.title(f"Extinction des espèces passives selon la stratégie {strategie}")
+    # plt.grid(True)
+    # filename = "results/"+graph_name+"_"+strategie
+    # plt.savefig(filename, dpi=300, bbox_inches='tight')
+    # if affichage : 
+    #     plt.show()
+    # plt.close()
 
-    return aire_totale, temps_classement
+    return aire_totale, temps_classement, proportion_actives_supp, proportion_passives_restants
