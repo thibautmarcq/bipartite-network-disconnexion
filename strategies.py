@@ -347,7 +347,31 @@ def order_neighborhood_centrality(graph : Dict[int, List[int]]) -> List[int] :
     triees = sorted(brut, key=lambda x: (x[1], len(graph[x[0]]), -x[0]), reverse=True)
     return [node for node, score in triees]
 
+# ----- NESTEDNESS -----
+def nestedness_centrality(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int]) -> Dict[int, float] :
+    """ Retourne les noeuds du graphe ordonnés par la centralité d'emboitement (nestedness) 
+    """
+    degree = {node: len(neighbors) for node, neighbors in graph.items()}
+    inverse_sum = {}
+    for p in passives :
+        inverse_sum[p] = sum(1.0 / degree[a] for a in graph[p] if a in actives)
 
+    contributions = {}
+    for a in actives :
+        if degree[a] == 0 :
+            contributions[a] = float("inf")
+        else :
+            contributions[a] = sum(inverse_sum[p] for p in graph[a]) / degree[a]
+    return contributions
+
+
+def order_nestedness_centrality(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int]) -> List[int] :
+    """ Retourne les noeuds actifs ordonnés par contribution à la nestedness CROISSANTE
+        (on retire d'abord ceux qui contribuent le moins). En cas d'égalité, le plus petit indice.
+    """
+    contributions = nestedness_centrality(graph, actives, passives)
+    triees = sorted(contributions.items(), key=lambda x: (x[1], x[0]))
+    return [node for node, score in triees]
 
 # ----- COMMUN A TOUTES LES STRATEGIES POUR LE CLASSEMENT -----
 
@@ -384,3 +408,6 @@ def get_strategy_ranking(strategie : str, graph : Dict[int, List[int]], actives 
 
         case "neighborhood" :
             return order_neighborhood_centrality(graph)
+        
+        case "nestedness" : 
+            return order_nestedness_centrality(graph, actives, passives)

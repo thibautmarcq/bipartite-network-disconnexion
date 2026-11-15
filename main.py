@@ -17,7 +17,7 @@ DATASETS = list_networks()
 
 N_RANDOM = 100
 STRATEGIES = ("closeness", "eigenvector", "betweenness", "degree",
-              "pagerank", "musrank", "musrank_reversed", "neighborhood")
+              "pagerank", "musrank", "musrank_reversed", "neighborhood", "nestedness")
 
 
 def run_random(graph, actives, passives, name):
