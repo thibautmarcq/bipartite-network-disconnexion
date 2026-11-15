@@ -6,19 +6,14 @@ from pathlib import Path
 
 DATA_DIR = Path("data/fichiers_csv/du papier")
 
-def list_datasets(folder=DATA_DIR):
-    """Returns the sorted dataset names found in the folder (without extension)."""
-    names = []
-    for edges in folder.glob("*_edges.csv"):
-        name = edges.name[: -len("_edges.csv")]
-        if not (folder / f"{name}_nodes.csv").exists():
-            print(f"skipped {name}: no matching _nodes.csv")
-            continue
-        names.append(name)
-    names = sorted(names)
-    return names
 
-DATASETS = list_datasets()
+def list_networks():
+    """Réseaux X pour lesquels X_nodes.csv et X_edges.csv existent."""
+    names = [p.name[:-len("_edges.csv")] for p in DATA_DIR.glob("*_edges.csv")
+             if (DATA_DIR / (p.name[:-len("_edges.csv")] + "_nodes.csv")).exists()]
+    return sorted(names)
+
+DATASETS = list_networks()
 
 N_RANDOM = 100
 STRATEGIES = ("closeness", "eigenvector", "betweenness", "degree",

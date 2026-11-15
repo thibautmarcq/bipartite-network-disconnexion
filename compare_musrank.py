@@ -1,7 +1,3 @@
-"""Compare la moyenne des aires d'extinction : musrank, musrank adaptatif, musrank inversé.
-
-Usage : python compare_musrank.py
-"""
 from pathlib import Path
 
 import matplotlib
@@ -14,7 +10,6 @@ from adaptive_musrank import adaptive_musrank_result
 from tools import read_unoriented_from_csv
 
 DATA_DIR = Path("data/fichiers_csv/du papier")
-NETWORKS = None            # None = tous les réseaux du dossier, ou par exemple ["alpine", "dupint"]
 
 
 def list_networks():
@@ -25,7 +20,7 @@ def list_networks():
 
 
 def main():
-    networks = NETWORKS or list_networks()
+    networks = list_networks()
     variants = ["musrank", "musrank_adaptive", "musrank_reversed"]
     areas = {v: [] for v in variants}
     kept = []
