@@ -1,7 +1,6 @@
 from time import time
 from tools import *
 from strategies import *
-from constants import *
 
 # ------ POUR L'ANALYSE DES RESULTATS DU MUSRANK ADAPTIF ------
 

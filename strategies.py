@@ -56,7 +56,6 @@ def order_closeness_centrality(graph : Dict[int, List[int]]) -> List[int]:
     return nodes
 
 
-
 # ------ CENTRALITE D'INTERMEDIARITE -----
 def betweenness_centrality(graph : Dict[int, List[int]]) -> Dict[int, int] :
     """ Calcule les centralités d'intermédiarité de chaque noeud du graphe """
@@ -165,75 +164,7 @@ def normalize_log_scores(scores):
 
 
 # ------ MUSRANK (papier référencé) -----
-"""
 
-def musrank_centrality(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int], max_iter=500, tol=1e-8) -> Tuple[Dict[int, float], Dict[int, float]]:
-    # Calcule les centralités de MusRank de chaque noeud du graphe 
-
-    if not actives or not passives:
-        raise ValueError("Both partitions must contain at least one node.")
-
-    # initialisation
-    importance = {u: 1.0 for u in actives}
-    vulnerability = {v: 1.0 for v in passives}
-
-    # bad = [a for a in actives if not any(p in passives for p in graph[a])]
-    # bad_edges = [(p, a) for p in passives for a in graph[p]
-    #         if a in actives and p not in graph[a]]
-    # # print(len(bad), len(bad_edges))
-    # print("remaining actives:", len(actives), "remaining passives:", len(passives))
-    for i in range(max_iter):
-        # if min(importance.values()) <= 1e-200:
-        #     print("underflow", min(importance.values()), len(actives), len(passives))
-        # Mise à jour des centralités
-        new_importance = {
-            a: sum(vulnerability[p] for p in graph[a] if p in passives)
-            for a in actives
-        }
-        # print(i)
-        # print("Remaining actives:", len(actives))
-        # print("Zero importance:", [a for a in actives if importance[a] == 0])
-        new_vulnerability = {
-            p: 1.0 / sum(
-                1.0 / new_importance[a] for a in graph[p] if a in actives
-            )
-            if any(a in actives for a in graph[p]) else 0.0
-            for p in passives
-        }
-
-        # Normalisation par la moyenne
-        mean_I = sum(new_importance.values()) / len(actives)
-        mean_V = sum(new_vulnerability.values()) / len(passives) 
-
-        if mean_I > 0:
-            new_importance = {a: I / mean_I for a, I in new_importance.items()}
-        if mean_V > 0:
-            new_vulnerability = {p: V / mean_V for p, V in new_vulnerability.items()}
-
-        # Vérification de la convergence
-        diff_I = max(
-            (abs(new_importance[a] - importance[a]) for a in actives),
-            default=0.0
-        )
-
-        diff_V = max(
-            (abs(new_vulnerability[p] - vulnerability[p]) for p in passives),
-            default=0.0
-        )
-        # si la différence maximale est inférieure à la tolérance, on arrête l'itération
-        diff = max(diff_I, diff_V)
-
-        importance = new_importance
-        vulnerability = new_vulnerability
-
-        if diff < tol:
-            break
-    
-    return importance, vulnerability
-
-    # new_dico = importance | vulnerability
-    # return new_dico
-"""
 
 def order_musrank_centrality(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int]) -> List[int] :
     """ Retourne les noeuds du graphe ordonnés par centralité de MusRank décroissante """
@@ -349,7 +280,7 @@ def order_neighborhood_centrality(graph : Dict[int, List[int]]) -> List[int] :
 
 # ----- NESTEDNESS -----
 def nestedness_centrality(graph : Dict[int, List[int]], actives : Set[int], passives : Set[int]) -> Dict[int, float] :
-    """ Retourne les noeuds du graphe ordonnés par la centralité d'emboitement (nestedness) 
+    """ Retourne les scores des noeuds du graphe obtenus par la centralité d'emboitement (nestedness) 
     """
     degree = {node: len(neighbors) for node, neighbors in graph.items()}
     inverse_sum = {}

@@ -9,7 +9,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-DATA_DIR = Path("data/fichiers_csv/du papier")
+DATA_DIR = Path("data")
 
 STRATEGIES = ("closeness", "eigenvector", "betweenness", "degree",
               "pagerank", "musrank", "musrank_reversed", "neighborhood", "nestedness")

@@ -10,7 +10,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-DATA_DIR = Path("data/fichiers_csv/du papier")
+DATA_DIR = Path("data")
 
 def list_networks():
     """Réseaux X pour lesquels X_nodes.csv et X_edges.csv existent."""

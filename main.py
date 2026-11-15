@@ -4,7 +4,7 @@ from summary_plot import plot_curve_grid, plot_heatmap
 from tools import read_unoriented_from_csv
 from pathlib import Path
 
-DATA_DIR = Path("data/fichiers_csv/du papier")
+DATA_DIR = Path("data")
 
 
 def list_networks():
@@ -37,7 +37,7 @@ def main() -> None:
     results = {s: {} for s in ("random",) + STRATEGIES}
 
     for name in DATASETS:
-        path = f"data/fichiers_csv/du papier/{name}"
+        path = f"data/{name}"
         graph, actives, passives = read_unoriented_from_csv(path)
 
         area, x, mean, std = run_random(graph, actives, passives, name)

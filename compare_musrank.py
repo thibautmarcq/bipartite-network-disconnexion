@@ -9,7 +9,7 @@ from analyse_resultats import delete_nodes_result
 from adaptive_musrank import adaptive_musrank_result
 from tools import read_unoriented_from_csv
 
-DATA_DIR = Path("data/fichiers_csv/du papier")
+DATA_DIR = Path("data")
 
 
 def list_networks():
