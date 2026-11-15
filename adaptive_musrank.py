@@ -103,32 +103,4 @@ def adaptive_musrank_result(graph: Dict[int, List[int]],actives: Set[int], passi
 
         aire_totale += largeur * hauteur_moyenne
 
-    # Affichage et sauvegarde du graphique
-    # plt.figure(figsize=(8, 5))
-
-    # plt.plot(
-    #     proportion_actives_supp,
-    #     proportion_passives_eteintes,
-    #     marker='.',
-    #     color='blue'
-    # )
-
-    # plt.xlabel("Proportion de noeuds actifs supprimés")
-    # plt.ylabel("Proportion d'espèces passives éteintes")
-
-    # plt.title(
-    #     "Extinction des espèces passives selon MusRank adaptatif"
-    # )
-
-    # plt.grid(True)
-
-    # filename = "results/" + graph_name + "_musrank_adaptive"
-
-    # plt.savefig(filename, dpi=300, bbox_inches='tight')
-
-    # if affichage:
-    #     plt.show()
-
-    # plt.close()
-
     return aire_totale, temps_classement
