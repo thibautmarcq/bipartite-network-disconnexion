@@ -14,8 +14,8 @@ def _ensure_dir(path):
 # 1. Courbes superposées : une sous-figure par réseau
 # --------------------------------------------------------------------------
 def plot_curve_grid(curves, networks, path, baseline="random", ncols=2,
-                    xlabel="Proportion de noeuds passifs supprimés",
-                    ylabel="Proportion de noeuds actifs éteints"):
+                    xlabel="Proportion de noeuds actifs supprimés",
+                    ylabel="Proportion de noeuds passifs éteints"):
     """Une grille de sous-figures ; chaque sous-figure superpose toutes les stratégies.
 
     La stratégie `baseline` est tracée en pointillés noirs, avec une bande ± std

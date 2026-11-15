@@ -12,7 +12,7 @@ import numpy as np
 DATA_DIR = Path("data/fichiers_csv/du papier")
 
 STRATEGIES = ("closeness", "eigenvector", "betweenness", "degree",
-              "pagerank", "musrank", "musrank_reversed", "neighborhood")
+              "pagerank", "musrank", "musrank_reversed", "neighborhood", "nestedness")
 
 def list_networks():
     """Réseaux X pour lesquels X_nodes.csv et X_edges.csv existent."""
