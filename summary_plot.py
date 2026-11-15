@@ -123,8 +123,3 @@ def plot_heatmap(results, path, baseline="random", larger_is_better=True,
     _ensure_dir(path)
     fig.savefig(path, dpi=300, bbox_inches="tight")
     plt.close(fig)
-
-
-
-if __name__ == "__main__":
-    import sys
